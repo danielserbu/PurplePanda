@@ -659,55 +659,6 @@ privesc:
     extra_privesc_to: NONE
     summary: "You can create a malicious backdoor. More information: https://book.hacktricks.xyz/cloud-security/gcp-security/gcp-interesting-permissions/gcp-privesc-to-resources"
 
-
-
-  # storage
-  - title: "API Key read via 'storage.hmacKeys.create'"
-    summary: "You can escalate Cloud Storage permissions by creating an HMAC key for a higher-privileged Service Account. More information: https://book.hacktricks.xyz/cloud-security/gcp-security/gcp-interesting-permissions/gcp-privesc-to-resources"
-    relation: NO_RELATION
-    permissions: [storage.hmacKeys.create]
-    only_to_classes: [GcpStorage, GcpOrganization, GcpFolder, GcpProject]
-    extra_privesc_to: NONE
-  
-  - title: "Airflow DAG creation with 'storage.objects.create'"
-    summary: "You have permission to create/exec a DAG inside Airflow. You can abuse it to steal Composer's SA. More information: https://book.hacktricks.xyz/cloud-security/gcp-security/gcp-interesting-permissions/gcp-privesc-to-other-principals"
-    relation: PRIVESC
-    permissions: [storage.objects.create]
-    only_to_classes: [GcpServiceAccount, GcpStorage, GcpOrganization, GcpFolder, GcpProject]
-    extra_privesc_to: RUNNING_SA
-    second_order_relations: ["HAS_CODE"]
-    running_in: [GcpComposerEnv]
-  
-  - title: "Airflow DAG creation with 'storage.objects.setIamPolicy'"
-    summary: "You have permission to give you permissions to create/exec a DAG inside Airflow. You can abuse it to steal Composer's SA. More information: https://book.hacktricks.xyz/cloud-security/gcp-security/gcp-interesting-permissions/gcp-privesc-to-other-principals"
-    relation: PRIVESC
-    permissions: [storage.objects.setIamPolicy]
-    only_to_classes: [GcpServiceAccount, GcpStorage, GcpOrganization, GcpFolder, GcpProject]
-    extra_privesc_to: RUNNING_SA
-    second_order_relations: ["HAS_CODE"]
-    running_in: [GcpComposerEnv]
-  
-  - title: "Modification of Docker image used in K8s via 'storage.objects.create' and 'storage.objects.delete'"
-    summary: "You have permission to modify a docker image inside GCR taht is run in K8s. You can abuse it to privesc to the KSA run in that image. More information: https://book.hacktricks.xyz/cloud-security/gcp-security/gcp-interesting-permissions/gcp-privesc-to-other-principals"
-    relation: PRIVESC
-    permissions: [storage.objects.create, storage.objects.delete]
-    only_to_classes: [K8sServiceAccount, GcpStorage, GcpOrganization, GcpFolder, GcpProject]
-    extra_privesc_to: RUNNING_SA
-    # Bucket -STORES_IMAGE-> ContainerImage <-RUN_IMAGE- RunsContainerImage -PART_OF-> K8sPod <-RUN_IN- K8sServiceAccount
-    second_order_relations: ["STORES_IMAGE", "RUN_IMAGE", "PART_OF"] # "RUN_IN" not necesary as we are already using RUNNING_SA in extra_privesc_to
-    running_in: [K8sPod]
-  
-  - title: "Modification of Docker image used in K8s via 'storage.objects.setIamPolicy'"
-    summary: "You have permission to modify a docker image inside GCR taht is run in K8s. You can abuse it to privesc to the KSA run in that image. More information: https://book.hacktricks.xyz/cloud-security/gcp-security/gcp-interesting-permissions/gcp-privesc-to-other-principals"
-    relation: PRIVESC
-    permissions: [storage.objects.setIamPolicy]
-    only_to_classes: [K8sServiceAccount, GcpStorage, GcpOrganization, GcpFolder, GcpProject]
-    extra_privesc_to: RUNNING_SA
-    # Bucket -STORES_IMAGE-> ContainerImage <-RUN_IMAGE- RunsContainerImage -PART_OF-> K8sPod <-RUN_IN- K8sServiceAccount
-    second_order_relations: ["STORES_IMAGE", "RUN_IMAGE", "PART_OF"] # "RUN_IN" not necesary as we are already using RUNNING_SA in extra_privesc_to
-    running_in: [K8sPod]
-
-    
   # secretmanager
   - title: "Read secrets via 'secretmanager.secrets.get'"
     summary: "You can read secrets, where interesting sensitive information might be found. More information: https://book.hacktricks.xyz/cloud-security/gcp-security/gcp-interesting-permissions/gcp-privesc-to-resources"

@@ -46,7 +46,6 @@ class PurplePandaGoogle():
                         DiscCustomRolesPermissions(cred=cred["cred"], **kwargs).discover,
                         DiscServiceAccounts(cred=cred["cred"], **kwargs).discover,
                         DiscGroupsUsers(cred=cred["cred"], **kwargs).discover,
-                        DiscStorage(cred=cred["cred"], **kwargs).discover,
                         DiscComputeSubnetworks(cred=cred["cred"], **kwargs).discover, #Needed by DiscClusters
                         DiscClusters(cred=cred["cred"], **kwargs).discover,
                         DiscSecrets(cred=cred["cred"], **kwargs).discover
